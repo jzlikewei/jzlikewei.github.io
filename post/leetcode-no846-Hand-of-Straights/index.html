@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>leetcode题解 No846.一手顺子 | LiBai的记事本</title>
+<meta name="description" content="">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://jzlikewei.github.io//favicon.ico?v=1558428641057">
+<link rel="stylesheet" href="https://jzlikewei.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://jzlikewei.github.io/">
+        <img src="https://jzlikewei.github.io//images/avatar.png?v=1558428641057" class="site-logo">
+        <h1 class="site-title">LiBai的记事本</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">leetcode题解 No846.一手顺子</h2>
+            <div class="post-date">2019-05-21</div>
+            
+            <div class="post-content">
+              <p>很没有难度的一道题目，读懂题目后，按照对应的规则来走一遍就OK了。</p>
+<ol>
+<li>将手牌排序后，重叠的牌我们叠在一起（如下所示）：</li>
+</ol>
+<pre><code>#样例数据1
+数量：(1)(2)(2)(1)(1)(1)(1)           
+牌面：[1][2][3][4][6][7][8]
+</code></pre>
+<ol start="2">
+<li>每次按照顺序从排好序的手牌里取w张牌，放到一个【组】里</li>
+</ol>
+<ul>
+<li>如果组内牌不连续，返回false</li>
+<li>如果取不够w张牌，返回false</li>
+</ul>
+<pre><code>#取出 1,2,3后
+数量：(0)(1)(1)(1)(1)(1)(1)           
+牌面：[1][2][3][4][6][7][8]
+</code></pre>
+<ol start="3">
+<li>
+<p>​ 调整下手牌，使手牌继续有序且“重叠”，如果手牌非空，goto Step 2</p>
+<pre><code>#调整下空位,现在手牌中的第一张是2了
+数量：(1)(1)(1)(1)(1)(1)           
+牌面：[2][3][4][6][7][8]
+</code></pre>
+<p>​</p>
+</li>
+</ol>
+<p>很容易写出一个双重循环的解法：</p>
+<pre><code>while 手牌非空{
+  for(i = 0;i&lt;w;++i){
+    从手牌中取牌
+  }
+  调整手牌，移除空位
+}
+</code></pre>
+<p>这部分的时间复杂度是O(N) N = hand.length</p>
+<p><code>这里虽然是双重循环，但是时间复杂度并不是O(Hand.length*w),因为，每张牌我们都至多使用一次，所以是O(N)</code></p>
+<p>手牌排序然后重叠，这样一个操作的时间复杂度是<code>O(N*log(n))</code>，所以整体的时间复杂度是<code>O(N*log(n))</code></p>
+<pre><code class="language-ruby">def is_n_straight_hand(hand, w)
+  return false if hand.length % w != 0
+  elements = {}
+  hand.each { |i| elements[i] = elements[i].to_i + 1}
+  elements = elements.to_a
+  elements.sort! { |x,y| x[0] &lt;=&gt; y[0] }
+  until elements.empty?
+    group = []
+    w.times do |i|
+      return false if i &gt;= elements.size
+      group &lt;&lt; elements[i][0]
+      elements[i][1] -= 1
+      if group.size &gt; 1
+        return false if group[-1] != group[-2] + 1
+      end
+    end
+    while !elements.empty? and elements[0][1] == 0
+      elements.shift
+    end
+  end
+  true
+end
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://jzlikewei.github.io//tag/leetcode" class="tag">
+                    leetcode
+                  </a>
+                
+              </div>
+            
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '596515836bd5f3dd1f57',
+        clientSecret: '3e4fac882dec52c172054fae59a7ba4c9329138d',
+        repo: 'jzlikewei.github.io',
+        owner: 'jzlikewei',
+        admin: ['jzlikewei'],
+        id: location.pathname,      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>
