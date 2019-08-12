@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jzlikewei.github.io/</id>
     <title>LiBai的记事本</title>
-    <updated>2019-08-12T17:37:43.133Z</updated>
+    <updated>2019-08-12T17:45:36.600Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jzlikewei.github.io/"/>
     <link rel="self" href="https://jzlikewei.github.io//atom.xml"/>
@@ -262,7 +262,6 @@ for url in urls :
 print(&quot;ERROR URLS:&quot;)
 print(errs)
 </code></pre>
-<p><img src="https://jzlikewei.github.io//post-images/1565631445586.jpg" alt=""></p>
 <h4 id=""></h4>
 <p>“老师，那我们要怎样才能获取到完整的回答啊，以及怎么把小姐姐们和照片对应起来啊”</p>
 <p>那是下次的内容啦</p>
